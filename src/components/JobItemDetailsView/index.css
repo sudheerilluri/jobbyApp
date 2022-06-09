@@ -1,0 +1,66 @@
+.job-detail {
+  background-color: #000000;
+  min-height: 100vh;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.job-sub {
+  background-color: #202020;
+  border-radius: 10px;
+  border-width: 0px;
+  margin-top: 30px;
+  margin-left: 20px;
+  margin-right: 20px;
+  padding: 20px;
+}
+.job-location {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.skill {
+  list-style-type: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.life-at {
+  display: flex;
+}
+.life-img {
+  width: 50vw;
+}
+.similar {
+  display: flex;
+  padding: 10px;
+  list-style-type: none;
+}
+.sub-2 {
+  margin-top: 30px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.similar-heading {
+  margin-left: 20px;
+}
+.similar-img {
+  width: 80px;
+  height: 80px;
+}
+.similar-location {
+  display: flex;
+  justify-content: space-between;
+}
+.similar-list {
+  margin: 10px;
+  border-radius: 10px;
+  background-color: #202020;
+  border-width: 0px;
+  padding: 10px;
+}
+.skills {
+  list-style-type: none;
+}
