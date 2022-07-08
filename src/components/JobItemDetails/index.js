@@ -1,8 +1,12 @@
 import {Component} from 'react'
 import Cookies from 'js-cookie'
 import Loader from 'react-loader-spinner'
-import Header from '../Header'
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css'
+
+import Header from '../Header'
+import SkillItem from '../SkillItem'
+import SimilarItems from '../SimilarJobs'
+
 import './index.css'
 
 const apiStatus = {
@@ -11,9 +15,10 @@ const apiStatus = {
   success: 'SUCCESS',
   fail: 'FAIL',
 }
-class JobItemDetailsView extends Component {
+
+class JobItemDetails extends Component {
   state = {
-    jobData: {},
+    jobData: [],
     status: apiStatus.initial,
   }
 
@@ -30,8 +35,8 @@ class JobItemDetailsView extends Component {
     const url = `https://apis.ccbp.in/jobs/${id}`
     const options = {headers: {Authorization: `Bearer ${jwt}`}, method: 'GET'}
     const response = await fetch(url, options)
+    const data = await response.json()
     if (response.ok === true) {
-      const data = await response.json()
       const updateJobData = {
         companyLogoUrl: data.job_details.company_logo_url,
         companyWebsiteUrl: data.job_details.company_website_url,
@@ -59,8 +64,6 @@ class JobItemDetailsView extends Component {
         packagePerAnnum: data.job_details.package_per_annum,
         rating: data.job_details.rating,
       }
-      // console.log(updateJobData)
-
       this.setState({
         jobData: updateJobData,
         status: apiStatus.success,
@@ -76,6 +79,10 @@ class JobItemDetailsView extends Component {
     </div>
   )
 
+  onLoadJobs = () => {
+    this.getJobData()
+  }
+
   renderFail = () => (
     <div>
       <img
@@ -85,44 +92,55 @@ class JobItemDetailsView extends Component {
       />
       <h1>Oops! Something Went Wrong</h1>
       <p>We cannot seem to find the page you are looking for</p>
+      <button type="button" onClick={this.onLoadJobs}>
+        Retry
+      </button>
     </div>
   )
 
   renderView = () => {
     const {jobData} = this.state
-    console.log(jobData.similar)
+    const {skills, similarJobs} = jobData
+
     return (
-      <div className="job-detail">
-        <div className="job-sub">
-          <ul className="skills">
-            <li>
+      <>
+        <div className="job-detail">
+          <div className="skills">
+            <div>
               <img
                 src={jobData.companyLogoUrl}
                 alt="job details company logo"
                 className=""
               />
-              <p>{jobData.similarJobs[0].title}</p>
+              <h1>{similarJobs[0].title}</h1>
               <p>{jobData.rating}</p>
-            </li>
-            <li className="job-location">
+            </div>
+            <div className="job-location">
               <p>{jobData.location}</p>
               <p>{jobData.employmentType}</p>
               <p>{jobData.packagePerAnnum}</p>
-            </li>
-          </ul>
+            </div>
+          </div>
           <hr />
           <h1>Description</h1>
-          <a href={jobData.companyWebsiteUrl}>Visit</a>
+          <button type="button">
+            <a
+              href={jobData.companyWebsiteUrl}
+              rel="noreferrer"
+              target="_blank"
+            >
+              Visit
+            </a>
+          </button>
           <p>{jobData.jobDescription}</p>
           <h1>Skills</h1>
-          <ul className="skill">
-            {jobData.skills.map(each => (
-              <li key={each.name}>
-                <img src={each.imageUrl} alt={each.name} className="" />
-                <p>{each.name}</p>
-              </li>
-            ))}
-          </ul>
+          <div className="">
+            <ul className="skill">
+              {skills.map(each => (
+                <SkillItem key={skills.indexOf(each)} skillList={each} />
+              ))}
+            </ul>
+          </div>
           <h1>Life at Company</h1>
           <div className="life-at">
             <p>{jobData.lifeAtCompany.description}</p>
@@ -132,44 +150,27 @@ class JobItemDetailsView extends Component {
               className="life-img"
             />
           </div>
+
+          <h1 className="similar-heading">Similar Jobs</h1>
+          <div className="">
+            <ul className="sub-2 similar">
+              {similarJobs.map(each => (
+                <SimilarItems key={each.id} similar={each} />
+              ))}
+            </ul>
+          </div>
         </div>
-        <h1 className="similar-heading">Similar Jobs</h1>
-        <div className="sub-2">
-          <ul className="similar">
-            {jobData.similarJobs.map(each => (
-              <li key={each.id} className="similar-list">
-                <div>
-                  <img
-                    src={each.companyLogoUrl}
-                    alt="similar job company logo"
-                    className="similar-img"
-                  />
-                  <div>
-                    <h1>{each.title}</h1>
-                    <p>{each.rating}</p>
-                  </div>
-                </div>
-                <h1>Description</h1>
-                <p>{each.jobDescription}</p>
-                <div className="similar-location">
-                  <p>{each.location}</p>
-                  <p>{each.employmentType}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
+      </>
     )
   }
 
   getView = () => {
     const {status} = this.state
     switch (status) {
-      case apiStatus.progress:
-        return this.renderLoader()
       case apiStatus.success:
         return this.renderView()
+      case apiStatus.progress:
+        return this.renderLoader()
       case apiStatus.fail:
         return this.renderFail()
       default:
@@ -178,7 +179,6 @@ class JobItemDetailsView extends Component {
   }
 
   render() {
-    // console.log(skills)
     return (
       <>
         <Header />
@@ -188,4 +188,4 @@ class JobItemDetailsView extends Component {
   }
 }
 
-export default JobItemDetailsView
+export default JobItemDetails

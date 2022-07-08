@@ -13,20 +13,22 @@ class Header extends Component {
   render() {
     return (
       <div className="header">
-        <Link to="/">
-          <img
-            src="https://assets.ccbp.in/frontend/react-js/logo-img.png"
-            alt="website logo"
-            className="logo"
-          />
-        </Link>
         <ul className="header-list">
-          <Link to="/">
+          <Link to="/" key="logo">
+            <li>
+              <img
+                src="https://assets.ccbp.in/frontend/react-js/logo-img.png"
+                alt="website logo"
+                className="logo"
+              />
+            </li>
+          </Link>
+          <Link to="/" key="home">
             <li>
               <button type="button">Home</button>
             </li>
           </Link>
-          <Link to="/jobs">
+          <Link to="/jobs" key="jobs">
             <li>
               <button type="button">Jobs</button>
             </li>
